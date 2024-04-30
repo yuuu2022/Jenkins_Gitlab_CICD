@@ -13,8 +13,10 @@ try to complete a task with CICD .
       
 installation of gitlab:
 
-1. docker pull gitlab/gitlab-ce
-2. sudo docker run --d \
+1. install gitlab
+   docker pull gitlab/gitlab-ce
+2. create container
+   sudo docker run --d \
   --hostname gitlab.example.com \
   --p 8443:443 --p 8980:80 --p 8922:22 \
   --name gitlab \
@@ -24,5 +26,14 @@ installation of gitlab:
   --volume $GITLAB_HOME/data:/var/opt/gitlab \
   --shm-size 256m \
   gitlab/gitlab-ce:latest
-
+3. set the password to gitlab
+   docker exec -it <container_name_or_id> bash
+   # Inside the container, start a Rails console
+   gitlab-rails console -e production
+    
+   # In the Rails console, execute the following commands to change the root password
+   user = User.where(id: 1).first
+   user.password = 'your_new_password'
+   user.password_confirmation = 'your_new_password'
+   user.save!
 
